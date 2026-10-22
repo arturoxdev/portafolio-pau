@@ -1,0 +1,88 @@
+---
+import { getImage } from 'astro:assets';
+import type { ProposalVideo } from '../data/proposal';
+
+interface Props {
+  video: ProposalVideo;
+  delay?: number;
+}
+
+const { video, delay = 0 } = Astro.props;
+const poster = await getImage({ src: video.poster, width: Math.min(video.width, 1280), format: 'webp', quality: 70 });
+// Cada video crece en proporción a su relación de aspecto, así todos quedan a la misma altura en la fila.
+const ratio = video.width / video.height;
+---
+
+<article class="item" data-reveal="scale" style={`--ratio: ${ratio}; --aspect: ${video.width} / ${video.height}; --d: ${delay}s`}>
+  <div class="frame">
+    <video controls playsinline preload="none" poster={poster.src} width={video.width} height={video.height} aria-label={`Video: ${video.title}`}>
+      <source src={video.src} type="video/mp4" />
+    </video>
+    <span class="pill format">{video.format}</span>
+  </div>
+  <div class="meta">
+    <h3>{video.title}</h3>
+    <p>{video.description}</p>
+  </div>
+</article>
+
+<style>
+  .item {
+    flex: var(--ratio) 1 0;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .frame {
+    position: relative;
+    aspect-ratio: var(--aspect);
+    border-radius: 22px;
+    overflow: hidden;
+    border: 2px solid var(--paper);
+    box-shadow: 8px 8px 0 var(--yellow);
+    background: #000;
+  }
+  video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .format {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    background: var(--yellow);
+    color: var(--ink);
+    pointer-events: none;
+  }
+  .meta {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 0 4px;
+  }
+  h3 {
+    margin: 0;
+    font-weight: 900;
+    font-size: 20px;
+    letter-spacing: -0.01em;
+  }
+  p {
+    margin: 0;
+    max-width: 560px;
+    font-size: 15px;
+    line-height: 1.45;
+    font-weight: 500;
+    color: #b8b2a6;
+  }
+  @media (max-width: 720px) {
+    .item {
+      flex: none;
+      width: 100%;
+    }
+    .frame {
+      width: min(100%, calc(var(--ratio) * 560px));
+    }
+  }
+</style>

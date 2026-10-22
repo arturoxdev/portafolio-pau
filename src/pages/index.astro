@@ -1,0 +1,687 @@
+---
+import { Image } from 'astro:assets';
+import Layout from '../layouts/Layout.astro';
+import VideoCard from '../components/VideoCard.astro';
+import InstagramIcon from '../components/InstagramIcon.astro';
+import ProposalVideo from '../components/ProposalVideo.astro';
+import { proposal } from '../data/proposal';
+import { site, instagramUrl, whatsappUrl } from '../data/site';
+import { videos } from '../data/videos';
+import photo from '../assets/paulina-avatar.jpg';
+
+const mailto = site.email ? `mailto:${site.email}` : '';
+const contacts = [
+  mailto && { label: 'Correo', value: site.email, href: mailto, primary: true },
+  whatsappUrl && { label: 'WhatsApp', value: site.phoneDisplay, href: whatsappUrl, external: true },
+  site.phone && { label: 'Teléfono', value: site.phoneDisplay, href: `tel:${site.phone}` },
+  instagramUrl && { label: 'Instagram', value: `@${site.instagram}`, href: instagramUrl, external: true },
+].filter((c) => !!c);
+const [firstName, ...lastNames] = site.name.split(' ');
+---
+
+<Layout
+  title={`${site.name} — ${site.role}`}
+  description={`Portafolio de ${site.name}: ${site.role.toLowerCase()}. Contenido visual para pauta, reels y redes en ${site.city}.`}
+>
+  <div class="page">
+    <header class="topbar wrap a-down">
+      <a href="#inicio" class="brand">{site.shortName} — Portafolio</a>
+      <nav>
+        <a href="#propuesta" class="nav-link">Propuesta</a>
+        <a href="#trabajos" class="nav-link">Trabajos</a>
+        <a href="#contacto" class="nav-link">Contacto</a>
+        {
+          instagramUrl && (
+            <a href={instagramUrl} target="_blank" rel="noopener" class="nav-link nav-ig">
+              <InstagramIcon /> Instagram
+            </a>
+          )
+        }
+      </nav>
+    </header>
+
+    <main>
+      <section id="inicio" class="hero wrap">
+        <div class="avatar">
+          <Image
+            src={photo}
+            alt={`Foto de ${site.name}`}
+            width={148}
+            height={148}
+            densities={[1, 2]}
+            fit="cover"
+            format="webp"
+            quality={78}
+            loading="eager"
+            fetchpriority="high"
+          />
+        </div>
+
+        <div class="hero-body">
+        <h1>
+          <span class="serif first a-write" style="--d: 0.25s">{firstName}</span>
+          <span class="last a-rise" style="--d: 0.45s">{lastNames.join(' ')}</span>
+        </h1>
+
+        <div class="tags">
+          <span class="role a-pop" style="--d: 0.6s">{site.role}</span>
+          {
+            instagramUrl && (
+              <a href={instagramUrl} target="_blank" rel="noopener" class="serif handle">
+                @{site.instagram}
+              </a>
+            )
+          }
+        </div>
+
+        <div class="bio">
+          {site.bio.map((text, i) => <p class="a-rise" style={`--d: ${0.7 + i * 0.1}s`}>{text}</p>)}
+        </div>
+
+        <div class="tools">
+          <span class="tools-label a-rise" style="--d: 0.8s">Herramientas que uso</span>
+          <ul>
+            {
+              site.tools.map((t, i) => (
+                <li class="a-pop" style={`--d: ${0.85 + i * 0.05}s`}>
+                  <a href={t.url} target="_blank" rel="noopener">
+                    {t.name} <span>· {t.use}</span>
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+
+        <div class="hero-foot">
+        <div class="stats">
+          {
+            site.stats.map((s, i) => (
+              <div class="stat a-rise" style={`--d: ${1.2 + i * 0.1}s`}>
+                <span class="stat-value" data-count={/^\d+(\.\d+)?(\s*K)?$/.test(s.value) ? s.value : undefined}>
+                  {s.value}
+                </span>
+                <span class="stat-label">{s.label}</span>
+              </div>
+            ))
+          }
+        </div>
+
+        <div class="actions a-pop" style="--d: 1.45s">
+          {
+            instagramUrl && (
+              <a class="btn btn-fill" href={instagramUrl} target="_blank" rel="noopener">
+                Ver en Instagram
+                <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7" /><path d="M8 7h9v9" /></svg>
+              </a>
+            )
+          }
+          <a class:list={['btn', !instagramUrl && 'btn-fill']} href="#contacto">Escríbeme</a>
+        </div>
+        </div>
+        </div>
+      </section>
+
+
+      <section id="propuesta" class="proposal" aria-labelledby="propuesta-title">
+        <div class="wrap proposal-inner">
+          <div class="proposal-head" data-reveal>
+            <h2 id="propuesta-title">
+              <span class="caps">Mi propuesta</span>
+              <span class="serif">para {proposal.client}</span>
+            </h2>
+            <p>{proposal.intro}</p>
+          </div>
+          <div class="proposal-grid">
+            {proposal.videos.map((video, i) => <ProposalVideo video={video} delay={0.1 + i * 0.15} />)}
+          </div>
+        </div>
+      </section>
+
+      <section id="trabajos" class="grid-head wrap">
+        <h2 data-reveal>
+          <span class="caps">Trabajos</span>
+          <span class="serif accent">publicados</span>
+        </h2>
+        <div class="chips" data-reveal style="--d: 0.1s">
+          <span class="chip chip-on">Todos · {videos.length}</span>
+          <span class="chip">TikTok</span>
+          <span class="chip">Bienes raíces</span>
+        </div>
+      </section>
+
+      <section class="grid wrap" aria-label="Videos">
+        {videos.map((video, i) => <VideoCard video={video} index={i} />)}
+      </section>
+    </main>
+
+    <footer id="contacto" class="footer">
+      <div class="wrap footer-inner">
+        <div class="footer-top">
+          <h2 data-reveal>
+            <span class="serif">¿Trabajamos</span>
+            <span class="caps">juntas?</span>
+          </h2>
+          <p class="footer-note" data-reveal style="--d: 0.1s">Cuéntame de tu proyecto y platiquemos por el medio que prefieras.</p>
+        </div>
+        <ul class="contact-grid">
+          {
+            contacts.map((c, i) => (
+              <li data-reveal style={`--d: ${0.15 + i * 0.1}s`}>
+                <a
+                  href={c.href}
+                  class:list={['contact', c.primary && 'contact-primary']}
+                  {...(c.external ? { target: '_blank', rel: 'noopener' } : {})}
+                >
+                  <span class="c-label">{c.label}</span>
+                  <span class="c-value">{c.value}</span>
+                  <span class="c-arrow" aria-hidden="true">↗</span>
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+        <div class="footer-bottom">
+          <span>© {new Date().getFullYear()} {site.name} · {site.role} · {site.city}</span>
+          <span>Pauta · Reels · Redes · IA generativa</span>
+        </div>
+      </div>
+    </footer>
+  </div>
+</Layout>
+
+<script is:inline>
+  // Las cifras del hero cuentan desde cero al cargar.
+  (() => {
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    document.querySelectorAll('[data-count]').forEach((el, i) => {
+      const [, num, suffix = ''] = el.dataset.count.match(/^([\d.]+)(.*)$/);
+      const target = parseFloat(num);
+      const decimals = (num.split('.')[1] || '').length;
+      const start = performance.now() + 1200 + i * 100;
+      const duration = 1000;
+      el.textContent = (0).toFixed(decimals) + suffix;
+      const tick = (now) => {
+        const t = Math.min(Math.max((now - start) / duration, 0), 1);
+        const eased = 1 - Math.pow(1 - t, 3);
+        el.textContent = (target * eased).toFixed(decimals) + suffix;
+        if (t < 1) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    });
+  })();
+</script>
+
+<style>
+  .wrap {
+    width: 100%;
+    max-width: 1152px;
+    margin: 0 auto;
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+  .page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  main {
+    flex: 1;
+  }
+
+  /* Barra superior */
+  .topbar {
+    padding-top: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .brand {
+    font-weight: 900;
+    font-size: 14px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 10px 0;
+  }
+  nav {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .nav-link {
+    font-weight: 700;
+    font-size: 14px;
+    padding: 12px 16px;
+    border-radius: 999px;
+  }
+  .nav-ig {
+    padding: 12px 18px;
+    border: 2px solid var(--ink);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* Cabecera */
+  .hero {
+    padding-top: 40px;
+    padding-bottom: 36px;
+    display: flex;
+    align-items: center;
+    gap: 40px;
+  }
+  .avatar {
+    animation: pop 0.8s var(--spring) 0.05s backwards, shadow-in 0.5s var(--ease) 0.7s backwards;
+    transition: transform 0.3s var(--spring);
+    flex: none;
+    width: 148px;
+    height: 148px;
+    border-radius: 50%;
+    background: var(--yellow);
+    border: 3px solid var(--ink);
+    box-shadow: 6px 6px 0 var(--red);
+    overflow: hidden;
+  }
+  .avatar:hover {
+    transform: rotate(-6deg) scale(1.04);
+  }
+  .avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .hero-body {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  h1 {
+    margin: 0;
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    column-gap: 14px;
+    line-height: 0.95;
+  }
+  .first {
+    font-size: 68px;
+    color: var(--red);
+    letter-spacing: -0.02em;
+  }
+  .last {
+    font-weight: 900;
+    font-size: 44px;
+    text-transform: uppercase;
+    letter-spacing: -0.03em;
+  }
+  .tags {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .role {
+    font-weight: 900;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    background: var(--ink);
+    color: var(--paper);
+    padding: 7px 12px;
+    border-radius: 999px;
+  }
+  .handle {
+    font-size: 22px;
+    padding: 2px 4px;
+  }
+  .bio p {
+    margin: 0;
+  }
+  .bio {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-width: 680px;
+    font-size: 16px;
+    line-height: 1.45;
+    font-weight: 500;
+    color: var(--body);
+  }
+  .tools {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .tools-label {
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .tools ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .tools a {
+    display: block;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 6px 12px;
+    border-radius: 999px;
+    border: 2px solid var(--ink);
+    white-space: nowrap;
+    transition: transform 0.15s ease, background 0.2s ease, color 0.2s ease;
+  }
+  .tools a:hover {
+    transform: translateY(-2px);
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .tools a span {
+    font-weight: 500;
+    color: var(--muted);
+  }
+  .tools a:hover span {
+    color: #b8b2a6;
+  }
+  .hero-foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px 32px;
+    flex-wrap: wrap;
+    margin-top: 4px;
+  }
+  .stats {
+    display: flex;
+    gap: 28px;
+    flex-wrap: wrap;
+  }
+  .stat {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .stat-value {
+    font-weight: 900;
+    font-size: 24px;
+    letter-spacing: -0.03em;
+  }
+  .stat-label {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .actions .btn {
+    padding: 13px 22px;
+    font-size: 14px;
+  }
+  .caps {
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: -0.03em;
+    font-size: clamp(30px, 5vw, 44px);
+  }
+  .accent {
+    color: var(--red);
+  }
+
+  /* Propuesta */
+  .proposal {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .proposal-inner {
+    padding-top: 56px;
+    padding-bottom: 72px;
+    display: flex;
+    flex-direction: column;
+    gap: 36px;
+  }
+  .proposal-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 16px 40px;
+    flex-wrap: wrap;
+  }
+  .proposal h2 {
+    margin: 0;
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    flex-wrap: wrap;
+    line-height: 1;
+  }
+  .proposal h2 .serif {
+    font-size: clamp(34px, 5.5vw, 48px);
+    color: var(--yellow);
+  }
+  .proposal-head p {
+    margin: 0;
+    max-width: 440px;
+    font-size: 16px;
+    line-height: 1.5;
+    font-weight: 500;
+    color: #b8b2a6;
+  }
+  .proposal-grid {
+    display: flex;
+    gap: 40px 32px;
+  }
+  @media (max-width: 720px) {
+    .proposal-grid {
+      flex-direction: column;
+    }
+  }
+  .proposal + .grid-head {
+    border-top: 0;
+  }
+
+  /* Cuadrícula */
+  .grid-head {
+    padding-top: 40px;
+    padding-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 16px;
+    flex-wrap: wrap;
+    border-top: 2px solid var(--ink);
+  }
+  .grid-head h2 {
+    margin: 0;
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    flex-wrap: wrap;
+    line-height: 1;
+  }
+  .grid-head .serif {
+    font-size: clamp(34px, 5.5vw, 48px);
+  }
+  .chips {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .chip {
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 10px 14px;
+    border-radius: 999px;
+    border: 2px solid var(--ink);
+  }
+  .chip-on {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .grid {
+    padding-top: 12px;
+    padding-bottom: 72px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 40px 24px;
+  }
+
+  /* Pie */
+  .footer {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .footer-inner {
+    padding-top: 64px;
+    padding-bottom: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+  .footer-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .footer h2 {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    line-height: 0.9;
+  }
+  .footer h2 .serif {
+    font-size: clamp(42px, 8vw, 56px);
+    color: var(--yellow);
+  }
+  .footer h2 .caps {
+    font-size: clamp(46px, 9vw, 64px);
+  }
+  .footer-note {
+    margin: 0;
+    max-width: 320px;
+    font-size: 16px;
+    line-height: 1.5;
+    font-weight: 500;
+    color: #b8b2a6;
+  }
+  .contact-grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+  }
+  .contact {
+    position: relative;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 22px 24px;
+    border-radius: 22px;
+    border: 2px solid var(--paper);
+    color: var(--paper);
+    transition: transform 0.15s ease, background 0.2s ease, color 0.2s ease;
+  }
+  .contact:hover {
+    transform: translateY(-2px);
+    background: var(--paper);
+    color: var(--ink);
+  }
+  .contact-primary {
+    background: var(--red);
+    border-color: var(--red);
+  }
+  .contact-primary:hover {
+    border-color: var(--paper);
+  }
+  .c-label {
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    opacity: 0.75;
+  }
+  .c-value {
+    font-size: 18px;
+    font-weight: 900;
+    letter-spacing: -0.01em;
+    overflow-wrap: anywhere;
+  }
+  .c-arrow {
+    position: absolute;
+    top: 18px;
+    right: 22px;
+    font-weight: 900;
+  }
+  .footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    border-top: 1px solid var(--body);
+    padding-top: 20px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #b8b2a6;
+  }
+
+  @media (max-width: 720px) {
+    .hero {
+      padding-top: 20px;
+      padding-bottom: 24px;
+      flex-direction: column;
+      text-align: center;
+      gap: 14px;
+    }
+    .avatar {
+      width: 96px;
+      height: 96px;
+    }
+    .hero-body {
+      align-items: center;
+    }
+    h1 {
+      justify-content: center;
+    }
+    .first {
+      font-size: 50px;
+    }
+    .last {
+      font-size: 30px;
+    }
+    .tools ul,
+    .tags,
+    .hero-foot,
+    .actions {
+      justify-content: center;
+    }
+    .bio {
+      font-size: 15px;
+    }
+    .role {
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      white-space: nowrap;
+    }
+  }
+</style>

@@ -1,0 +1,226 @@
+---
+import { Image, getImage } from 'astro:assets';
+import type { Video } from '../data/videos';
+
+interface Props {
+  video: Video;
+  index: number;
+}
+
+const { video, index } = Astro.props;
+// Alterna los colores de la etiqueta como en el diseño.
+const tones = ['tone-paper', 'tone-yellow', 'tone-ink', 'tone-red'];
+const tone = tones[index % tones.length];
+// Escalona la aparición por columna al hacer scroll.
+const reveal = `--d: ${(index % 4) * 0.09}s`;
+const label = `TikTok · ${String(index + 1).padStart(2, '0')}`;
+const poster = video.clip && (await getImage({ src: video.clip.poster, width: 576, format: 'webp', quality: 70 }));
+---
+
+{
+  video.clip && poster ? (
+    <div class="card" data-reveal style={reveal}>
+      <div class="cover">
+        <video
+          class="thumb feed-video"
+          muted
+          loop
+          playsinline
+          preload="none"
+          poster={poster.src}
+          width="576"
+          height="1024"
+          aria-label={`Video: ${video.title}`}
+        >
+          <source src={video.clip.src} type="video/mp4" />
+        </video>
+        <div class="overlay">
+          <div class="top">
+            <span class:list={['pill', tone]}>{label}</span>
+            <button type="button" class="sound" aria-pressed="false" aria-label="Activar sonido">
+              <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M11 5 6 9H2v6h4l5 4z" fill="currentColor" />
+                <path class="on" d="M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14" />
+                <path class="off" d="m23 9-6 6M17 9l6 6" />
+              </svg>
+            </button>
+          </div>
+          <a class="cta" href={video.url} target="_blank" rel="noopener">Ver en TikTok ↗</a>
+        </div>
+      </div>
+      <a class="meta" href={video.url} target="_blank" rel="noopener">
+        <span class="title">{video.title}</span>
+        <span class="sub">{video.client} · {video.subtitle}</span>
+      </a>
+    </div>
+  ) : (
+    <a class="card" data-reveal style={reveal} href={video.url} target="_blank" rel="noopener" aria-label={`Ver ${video.title} en TikTok`}>
+      <div class="cover">
+        <Image
+          src={video.cover}
+          alt=""
+          widths={[280, 420]}
+          sizes="(max-width: 640px) 90vw, 340px"
+          format="webp"
+          quality={72}
+          loading={index < 4 ? 'eager' : 'lazy'}
+          class="thumb"
+        />
+        <div class="overlay">
+          <div class="top">
+            <span class:list={['pill', tone]}>{label}</span>
+            <svg aria-hidden="true" width="36" height="36" viewBox="0 0 36 36"><circle cx="18" cy="18" r="17" fill="#F2EEE6" stroke="#15130F" stroke-width="2" /><path d="M14 11l11 7-11 7z" fill="#15130F" /></svg>
+          </div>
+          <span class="cta">Ver en TikTok ↗</span>
+        </div>
+      </div>
+      <div class="meta">
+        <span class="title">{video.title}</span>
+        <span class="sub">{video.client} · {video.subtitle}</span>
+      </div>
+    </a>
+  )
+}
+
+<script is:inline>
+  // Simula el feed: el video corre en silencio mientras está en pantalla y se pausa al salir.
+  (() => {
+    const videos = document.querySelectorAll('.feed-video');
+    if (!videos.length || window.__feedReady) return;
+    window.__feedReady = true;
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting && !reduce) e.target.play().catch(() => {});
+          else e.target.pause();
+        }
+      },
+      { threshold: 0.5 },
+    );
+    videos.forEach((v) => {
+      io.observe(v);
+      const btn = v.parentElement.querySelector('.sound');
+      btn.addEventListener('click', () => {
+        v.muted = !v.muted;
+        if (!v.muted) v.play().catch(() => {});
+        btn.setAttribute('aria-pressed', String(!v.muted));
+        btn.setAttribute('aria-label', v.muted ? 'Activar sonido' : 'Silenciar');
+      });
+    });
+  })();
+</script>
+
+<style>
+  .card {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    color: var(--ink);
+  }
+  .card:hover {
+    color: var(--ink);
+  }
+  .cover {
+    position: relative;
+    aspect-ratio: 9 / 16;
+    border-radius: 22px;
+    overflow: hidden;
+    background: var(--ink);
+    border: 2px solid var(--ink);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+  .card:hover .cover,
+  .card:focus-visible .cover {
+    transform: translateY(-4px);
+    box-shadow: 6px 6px 0 var(--red);
+  }
+  .thumb {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .overlay {
+    position: absolute;
+    inset: 0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background: linear-gradient(to bottom, rgb(21 19 15 / 0.35), transparent 22%, transparent 70%, rgb(21 19 15 / 0.55));
+    pointer-events: none;
+  }
+  .overlay a,
+  .overlay button {
+    pointer-events: auto;
+  }
+  .top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .tone-paper { background: var(--paper); color: var(--ink); }
+  .tone-yellow { background: var(--yellow); color: var(--ink); }
+  .tone-ink { background: var(--ink); color: var(--paper); }
+  .tone-red { background: var(--red); color: var(--ink); }
+  .sound {
+    width: 36px;
+    height: 36px;
+    display: grid;
+    place-items: center;
+    padding: 0;
+    border-radius: 50%;
+    border: 2px solid var(--ink);
+    background: var(--paper);
+    color: var(--ink);
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease;
+  }
+  .sound:hover {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .sound .on,
+  .sound[aria-pressed='true'] .off {
+    display: none;
+  }
+  .sound[aria-pressed='true'] .on {
+    display: inline;
+  }
+  .cta {
+    align-self: center;
+    font-weight: 900;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    background: var(--paper);
+    color: var(--ink);
+    padding: 12px 16px;
+    border-radius: 999px;
+    border: 2px solid var(--ink);
+    transition: background 0.2s ease, color 0.2s ease;
+  }
+  .card:hover .cta {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .meta {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 0 4px;
+    color: var(--ink);
+  }
+  .title {
+    font-weight: 900;
+    font-size: 18px;
+    letter-spacing: -0.01em;
+  }
+  .sub {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--muted);
+  }
+</style>
