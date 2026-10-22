@@ -24,7 +24,7 @@ const ogImage = new URL('/og.jpg', Astro.site);
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <meta name="theme-color" content="#EFECE6" />
+    <meta name="theme-color" content="#F3EFEA" />
     <link rel="canonical" href={canonical} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="preload" href={archivo900} as="font" type="font/woff2" crossorigin />
@@ -74,13 +74,13 @@ const ogImage = new URL('/og.jpg', Astro.site);
 
 <style is:global>
   :root {
-    /* Paleta: neutros cálidos, salvia y café. */
-    --paper: #efece6;
+    /* Paleta: crema, taupe y café. */
+    --paper: #f3efea;
     --ink: #2b2722;
-    --olive: #3e4a34;
-    --accent: #6e7b5f;
-    --sage: #b7c2a7;
-    --sand: #ddd1c2;
+    --deep: #5a4a3f;
+    --accent: #7d6b5d;
+    --cream: #ded2c5;
+    --sand: #d9ccbf;
     --line: #d3c9bc;
     --dark: #3a322b;
     --on-dark-muted: #bcb1a3;
@@ -146,10 +146,10 @@ const ogImage = new URL('/og.jpg', Astro.site);
   }
   .btn:hover {
     transform: translateY(-2px);
-    background: var(--olive);
-    border-color: var(--olive);
+    background: var(--deep);
+    border-color: var(--deep);
     color: var(--paper);
-    box-shadow: 0 10px 24px rgb(62 74 52 / 0.25);
+    box-shadow: 0 10px 24px rgb(90 74 63 / 0.25);
   }
   .btn-fill {
     background: var(--accent);

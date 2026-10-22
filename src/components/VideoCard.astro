@@ -69,7 +69,7 @@ const poster = video.clip && (await getImage({ src: video.clip.poster, width: 57
         <div class="overlay">
           <div class="top">
             <span class:list={['pill', tone]}>{label}</span>
-            <svg aria-hidden="true" width="36" height="36" viewBox="0 0 36 36"><circle cx="18" cy="18" r="17" fill="#EFECE6" /><path d="M14 11l11 7-11 7z" fill="#3E4A34" /></svg>
+            <svg aria-hidden="true" width="36" height="36" viewBox="0 0 36 36"><circle cx="18" cy="18" r="17" fill="#F3EFEA" /><path d="M14 11l11 7-11 7z" fill="#5A4A3F" /></svg>
           </div>
           <span class="cta">Ver en TikTok ↗</span>
         </div>
@@ -163,8 +163,8 @@ const poster = video.clip && (await getImage({ src: video.clip.poster, width: 57
     align-items: center;
   }
   .tone-paper { background: var(--paper); color: var(--ink); }
-  .tone-yellow { background: var(--sand); color: var(--olive); }
-  .tone-ink { background: var(--olive); color: var(--paper); }
+  .tone-yellow { background: var(--sand); color: var(--deep); }
+  .tone-ink { background: var(--deep); color: var(--paper); }
   .tone-red { background: var(--accent); color: var(--paper); }
   .sound {
     width: 36px;
@@ -175,12 +175,12 @@ const poster = video.clip && (await getImage({ src: video.clip.poster, width: 57
     border-radius: 50%;
     border: 0;
     background: var(--paper);
-    color: var(--olive);
+    color: var(--deep);
     cursor: pointer;
     transition: background 0.2s ease, color 0.2s ease;
   }
   .sound:hover {
-    background: var(--olive);
+    background: var(--deep);
     color: var(--paper);
   }
   .sound .on,
@@ -204,7 +204,7 @@ const poster = video.clip && (await getImage({ src: video.clip.poster, width: 57
     transition: background 0.2s ease, color 0.2s ease;
   }
   .card:hover .cta {
-    background: var(--olive);
+    background: var(--deep);
     color: var(--paper);
   }
   .meta {
@@ -218,7 +218,7 @@ const poster = video.clip && (await getImage({ src: video.clip.poster, width: 57
     font-weight: 900;
     font-size: 18px;
     letter-spacing: -0.01em;
-    color: var(--olive);
+    color: var(--deep);
   }
   .sub {
     font-size: 14px;
