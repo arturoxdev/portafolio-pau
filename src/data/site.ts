@@ -1,3 +1,13 @@
+import premiere from '../assets/tools/premiere.svg';
+import photoshop from '../assets/tools/photoshop.svg';
+import illustrator from '../assets/tools/illustrator.svg';
+import firefly from '../assets/tools/firefly.svg';
+import higgsfield from '../assets/tools/higgsfield.png';
+import veo from '../assets/tools/veo.svg';
+import flow from '../assets/tools/flow.png';
+import suno from '../assets/tools/suno.png';
+import elevenlabs from '../assets/tools/elevenlabs.svg';
+
 // Datos de contacto. Rellena `instagram` (sin @); los campos vacíos ocultan su botón.
 export const site = {
   name: 'Paulina Guerrero López',
@@ -15,20 +25,15 @@ export const site = {
   ],
   // Herramientas que aparecen debajo de la bio; `use` es la nota pequeña junto al nombre y `url` el sitio oficial.
   tools: [
-    { name: 'Adobe Premiere Pro', use: 'edición', url: 'https://www.adobe.com/mx/products/premiere.html' },
-    { name: 'Photoshop', use: 'diseño', url: 'https://www.adobe.com/mx/products/photoshop.html' },
-    { name: 'Illustrator', use: 'diseño', url: 'https://www.adobe.com/mx/products/illustrator.html' },
-    { name: 'Adobe Firefly', use: 'IA', url: 'https://firefly.adobe.com/' },
-    { name: 'Higgsfield', use: 'IA', url: 'https://higgsfield.ai/' },
-    { name: 'Veo de Google', use: 'video IA', url: 'https://deepmind.google/models/veo/' },
-    { name: 'Flow', use: 'video IA', url: 'https://labs.google/flow/about' },
-    { name: 'Suno', use: 'música', url: 'https://suno.com/' },
-    { name: 'ElevenLabs', use: 'voz', url: 'https://elevenlabs.io/' },
-  ],
-  stats: [
-    { value: '8', label: 'videos' },
-    { value: '1.2 K', label: 'likes' },
-    { value: '9:16', label: 'formato' },
+    { name: 'Adobe Premiere Pro', icon: premiere, use: 'edición', url: 'https://www.adobe.com/mx/products/premiere.html' },
+    { name: 'Photoshop', icon: photoshop, use: 'diseño', url: 'https://www.adobe.com/mx/products/photoshop.html' },
+    { name: 'Illustrator', icon: illustrator, use: 'diseño', url: 'https://www.adobe.com/mx/products/illustrator.html' },
+    { name: 'Adobe Firefly', icon: firefly, use: 'IA', url: 'https://firefly.adobe.com/' },
+    { name: 'Higgsfield', icon: higgsfield, use: 'IA', url: 'https://higgsfield.ai/' },
+    { name: 'Veo de Google', icon: veo, use: 'video IA', url: 'https://deepmind.google/models/veo/' },
+    { name: 'Flow', icon: flow, use: 'video IA', url: 'https://labs.google/flow/about' },
+    { name: 'Suno', icon: suno, use: 'música', url: 'https://suno.com/' },
+    { name: 'ElevenLabs', icon: elevenlabs, use: 'voz', url: 'https://elevenlabs.io/' },
   ],
 };
 
