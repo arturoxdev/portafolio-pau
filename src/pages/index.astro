@@ -5,6 +5,7 @@ import VideoCard from '../components/VideoCard.astro';
 import InstagramIcon from '../components/InstagramIcon.astro';
 import ProposalVideo from '../components/ProposalVideo.astro';
 import { proposal } from '../data/proposal';
+import ProposalCarousel from '../components/ProposalCarousel.astro';
 import { site, instagramUrl, whatsappUrl } from '../data/site';
 import { videos } from '../data/videos';
 import photo from '../assets/paulina-retrato.jpg';
@@ -135,6 +136,7 @@ const [firstName, ...lastNames] = site.name.split(' ');
           <div class="proposal-grid">
             {proposal.videos.map((video, i) => <ProposalVideo video={video} delay={0.1 + i * 0.15} />)}
           </div>
+          <ProposalCarousel carousel={proposal.carousel} delay={0.1} />
         </div>
       </section>
 

@@ -1,0 +1,256 @@
+---
+import { getImage } from 'astro:assets';
+import type { ProposalCarousel } from '../data/proposal';
+
+interface Props {
+  carousel: ProposalCarousel;
+  delay?: number;
+}
+
+const { carousel, delay = 0 } = Astro.props;
+const posters = await Promise.all(
+  carousel.slides.map((slide) => getImage({ src: slide.poster, width: carousel.width, format: 'webp', quality: 70 })),
+);
+const total = carousel.slides.length;
+---
+
+<article class="carousel" data-reveal="scale" data-carousel style={`--aspect: ${carousel.width} / ${carousel.height}; --d: ${delay}s`}>
+  <div class="frame">
+    <div class="track" tabindex="0" aria-roledescription="carrusel" aria-label={carousel.title}>
+      {
+        carousel.slides.map((slide, i) => (
+          <video
+            class="slide"
+            muted
+            loop
+            playsinline
+            preload="none"
+            poster={posters[i].src}
+            width={carousel.width}
+            height={carousel.height}
+            aria-label={`Lámina ${i + 1} de ${total}`}
+          >
+            <source src={slide.src} type="video/mp4" />
+          </video>
+        ))
+      }
+    </div>
+    <span class="pill format">{carousel.format}</span>
+    <span class="count" aria-hidden="true"><span data-current>1</span>/{total}</span>
+    <button class="arrow prev" type="button" aria-label="Lámina anterior" data-prev>‹</button>
+    <button class="arrow next" type="button" aria-label="Lámina siguiente" data-next>›</button>
+  </div>
+  <div class="dots">
+    {carousel.slides.map((_, i) => <button type="button" class:list={['dot', { on: i === 0 }]} aria-label={`Ir a la lámina ${i + 1}`} data-dot={i} />)}
+  </div>
+  <div class="meta">
+    <h3>{carousel.title}</h3>
+    <p>{carousel.description}</p>
+  </div>
+</article>
+
+<script is:inline>
+  // Carrusel tipo Instagram: se desliza con scroll-snap y solo se reproduce la lámina visible.
+  (() => {
+    document.querySelectorAll('[data-carousel]').forEach((root) => {
+      const track = root.querySelector('.track');
+      const slides = [...root.querySelectorAll('.slide')];
+      const dots = [...root.querySelectorAll('[data-dot]')];
+      const current = root.querySelector('[data-current]');
+      let index = 0;
+      let onScreen = false;
+      // Lámina a la que va un desplazamiento en curso, para que varios clics seguidos avancen varias.
+      let target = null;
+
+      const sync = () => {
+        slides.forEach((v, i) => {
+          if (i === index && onScreen) v.play().catch(() => {});
+          else v.pause();
+        });
+        dots.forEach((d, i) => d.classList.toggle('on', i === index));
+        current.textContent = index + 1;
+      };
+      const go = (i) => {
+        const next = (i + slides.length) % slides.length;
+        target = next;
+        track.scrollTo({ left: next * track.clientWidth, behavior: 'smooth' });
+      };
+
+      const slideObserver = new IntersectionObserver(
+        (entries) => entries.forEach((e) => {
+          if (e.isIntersecting) {
+            index = slides.indexOf(e.target);
+            if (index === target) target = null;
+            sync();
+          }
+        }),
+        { root: track, threshold: 0.6 },
+      );
+      slides.forEach((v) => slideObserver.observe(v));
+      new IntersectionObserver(([e]) => {
+        onScreen = e.isIntersecting;
+        sync();
+      }, { threshold: 0.4 }).observe(root);
+
+      root.querySelector('[data-prev]').addEventListener('click', () => go((target ?? index) - 1));
+      root.querySelector('[data-next]').addEventListener('click', () => go((target ?? index) + 1));
+      dots.forEach((d, i) => d.addEventListener('click', () => go(i)));
+      track.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') go((target ?? index) + 1);
+        if (e.key === 'ArrowLeft') go((target ?? index) - 1);
+      });
+      track.addEventListener('pointerdown', () => (target = null));
+    });
+  })();
+</script>
+
+<style>
+  /* Carrusel a la izquierda y texto a la derecha; en móvil se apilan. */
+  .carousel {
+    display: grid;
+    grid-template-columns: minmax(0, 400px) minmax(0, 1fr);
+    grid-template-areas: 'frame meta' 'dots meta';
+    column-gap: 48px;
+    row-gap: 14px;
+    align-items: center;
+    margin-top: 20px;
+  }
+  .frame {
+    grid-area: frame;
+    position: relative;
+    aspect-ratio: var(--aspect);
+    border-radius: 22px;
+    overflow: hidden;
+    border: 1px solid rgb(239 236 230 / 0.2);
+    box-shadow: 0 24px 48px rgb(0 0 0 / 0.28);
+    background: var(--dark);
+  }
+  .track {
+    display: flex;
+    height: 100%;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    outline-offset: -3px;
+  }
+  .track::-webkit-scrollbar {
+    display: none;
+  }
+  .slide {
+    flex: 0 0 100%;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    scroll-snap-align: start;
+  }
+  .format,
+  .count {
+    position: absolute;
+    top: 16px;
+    pointer-events: none;
+  }
+  .format {
+    left: 16px;
+    background: var(--paper);
+    color: var(--deep);
+  }
+  .count {
+    right: 16px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--paper);
+    background: rgb(43 39 34 / 0.55);
+    padding: 6px 10px;
+    border-radius: 999px;
+  }
+  .arrow {
+    position: absolute;
+    top: 50%;
+    width: 40px;
+    height: 40px;
+    margin-top: -20px;
+    display: grid;
+    place-items: center;
+    padding: 0 0 3px;
+    border: 0;
+    border-radius: 50%;
+    background: rgb(243 239 234 / 0.9);
+    color: var(--deep);
+    font: 400 26px/1 var(--sans);
+    cursor: pointer;
+    transition: transform 0.15s ease, background 0.2s ease, color 0.2s ease;
+  }
+  .arrow:hover {
+    transform: scale(1.08);
+    background: var(--deep);
+    color: var(--paper);
+  }
+  .prev {
+    left: 12px;
+  }
+  .next {
+    right: 12px;
+  }
+  .dots {
+    grid-area: dots;
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+  }
+  .dot {
+    width: 8px;
+    height: 8px;
+    padding: 0;
+    border: 0;
+    border-radius: 999px;
+    background: rgb(222 210 197 / 0.35);
+    cursor: pointer;
+    transition: width 0.3s var(--ease), background 0.3s ease;
+  }
+  .dot.on {
+    width: 22px;
+    background: var(--cream);
+  }
+  .meta {
+    grid-area: meta;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 0 4px;
+    max-width: 420px;
+  }
+  h3 {
+    margin: 0;
+    font-weight: 900;
+    font-size: clamp(22px, 3vw, 30px);
+    letter-spacing: -0.01em;
+  }
+  p {
+    margin: 0;
+    font-size: 16px;
+    line-height: 1.45;
+    font-weight: 500;
+    color: var(--cream);
+  }
+  @media (max-width: 720px) {
+    .carousel {
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-areas: 'frame' 'dots' 'meta';
+      justify-items: center;
+    }
+    .frame {
+      width: min(100%, 420px);
+    }
+    .meta {
+      justify-self: stretch;
+      gap: 4px;
+    }
+    h3 {
+      font-size: 20px;
+    }
+    p {
+      font-size: 15px;
+    }
+  }
+</style>
