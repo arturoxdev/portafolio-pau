@@ -69,7 +69,7 @@ const poster = video.clip && (await getImage({ src: video.clip.poster, width: 57
         <div class="overlay">
           <div class="top">
             <span class:list={['pill', tone]}>{label}</span>
-            <svg aria-hidden="true" width="36" height="36" viewBox="0 0 36 36"><circle cx="18" cy="18" r="17" fill="#F2EEE6" stroke="#15130F" stroke-width="2" /><path d="M14 11l11 7-11 7z" fill="#15130F" /></svg>
+            <svg aria-hidden="true" width="36" height="36" viewBox="0 0 36 36"><circle cx="18" cy="18" r="17" fill="#EFECE6" /><path d="M14 11l11 7-11 7z" fill="#3E4A34" /></svg>
           </div>
           <span class="cta">Ver en TikTok ↗</span>
         </div>
@@ -126,14 +126,15 @@ const poster = video.clip && (await getImage({ src: video.clip.poster, width: 57
     aspect-ratio: 9 / 16;
     border-radius: 22px;
     overflow: hidden;
-    background: var(--ink);
-    border: 2px solid var(--ink);
+    background: var(--sand);
+    border: 1px solid var(--line);
+    box-shadow: 0 6px 18px rgb(43 39 34 / 0.08);
     transition: transform 0.25s ease, box-shadow 0.25s ease;
   }
   .card:hover .cover,
   .card:focus-visible .cover {
     transform: translateY(-4px);
-    box-shadow: 6px 6px 0 var(--red);
+    box-shadow: 0 20px 40px rgb(43 39 34 / 0.2);
   }
   .thumb {
     position: absolute;
@@ -149,7 +150,7 @@ const poster = video.clip && (await getImage({ src: video.clip.poster, width: 57
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    background: linear-gradient(to bottom, rgb(21 19 15 / 0.35), transparent 22%, transparent 70%, rgb(21 19 15 / 0.55));
+    background: linear-gradient(to bottom, rgb(43 39 34 / 0.3), transparent 22%, transparent 70%, rgb(43 39 34 / 0.5));
     pointer-events: none;
   }
   .overlay a,
@@ -162,9 +163,9 @@ const poster = video.clip && (await getImage({ src: video.clip.poster, width: 57
     align-items: center;
   }
   .tone-paper { background: var(--paper); color: var(--ink); }
-  .tone-yellow { background: var(--yellow); color: var(--ink); }
-  .tone-ink { background: var(--ink); color: var(--paper); }
-  .tone-red { background: var(--red); color: var(--ink); }
+  .tone-yellow { background: var(--sand); color: var(--olive); }
+  .tone-ink { background: var(--olive); color: var(--paper); }
+  .tone-red { background: var(--accent); color: var(--paper); }
   .sound {
     width: 36px;
     height: 36px;
@@ -172,14 +173,14 @@ const poster = video.clip && (await getImage({ src: video.clip.poster, width: 57
     place-items: center;
     padding: 0;
     border-radius: 50%;
-    border: 2px solid var(--ink);
+    border: 0;
     background: var(--paper);
-    color: var(--ink);
+    color: var(--olive);
     cursor: pointer;
     transition: background 0.2s ease, color 0.2s ease;
   }
   .sound:hover {
-    background: var(--ink);
+    background: var(--olive);
     color: var(--paper);
   }
   .sound .on,
@@ -199,11 +200,11 @@ const poster = video.clip && (await getImage({ src: video.clip.poster, width: 57
     color: var(--ink);
     padding: 12px 16px;
     border-radius: 999px;
-    border: 2px solid var(--ink);
+    border: 0;
     transition: background 0.2s ease, color 0.2s ease;
   }
   .card:hover .cta {
-    background: var(--ink);
+    background: var(--olive);
     color: var(--paper);
   }
   .meta {
@@ -217,6 +218,7 @@ const poster = video.clip && (await getImage({ src: video.clip.poster, width: 57
     font-weight: 900;
     font-size: 18px;
     letter-spacing: -0.01em;
+    color: var(--olive);
   }
   .sub {
     font-size: 14px;

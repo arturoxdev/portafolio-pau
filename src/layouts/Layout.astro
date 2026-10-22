@@ -24,7 +24,7 @@ const ogImage = new URL('/og.jpg', Astro.site);
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <meta name="theme-color" content="#F2EEE6" />
+    <meta name="theme-color" content="#EFECE6" />
     <link rel="canonical" href={canonical} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="preload" href={archivo900} as="font" type="font/woff2" crossorigin />
@@ -74,12 +74,18 @@ const ogImage = new URL('/og.jpg', Astro.site);
 
 <style is:global>
   :root {
-    --paper: #f2eee6;
-    --ink: #15130f;
-    --red: #e04e2b;
-    --yellow: #f3c34a;
-    --muted: #5c574e;
-    --body: #3a3630;
+    /* Paleta: neutros cálidos, salvia y café. */
+    --paper: #efece6;
+    --ink: #2b2722;
+    --olive: #3e4a34;
+    --accent: #6e7b5f;
+    --sage: #b7c2a7;
+    --sand: #ddd1c2;
+    --line: #d3c9bc;
+    --dark: #3a322b;
+    --on-dark-muted: #bcb1a3;
+    --muted: #7a7066;
+    --body: #4f483f;
     --serif: 'Instrument Serif', Georgia, serif;
     --sans: 'Archivo', system-ui, sans-serif;
     --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
@@ -105,7 +111,7 @@ const ogImage = new URL('/og.jpg', Astro.site);
     text-decoration: none;
   }
   a:hover {
-    color: var(--red);
+    color: var(--accent);
   }
   img,
   video {
@@ -135,16 +141,18 @@ const ogImage = new URL('/og.jpg', Astro.site);
     text-transform: uppercase;
     padding: 16px 26px;
     border-radius: 999px;
-    border: 2px solid var(--ink);
-    transition: transform 0.15s ease, background 0.2s ease, color 0.2s ease;
+    border: 1px solid var(--accent);
+    transition: transform 0.15s ease, background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
   }
   .btn:hover {
     transform: translateY(-2px);
-    background: var(--ink);
+    background: var(--olive);
+    border-color: var(--olive);
     color: var(--paper);
+    box-shadow: 0 10px 24px rgb(62 74 52 / 0.25);
   }
   .btn-fill {
-    background: var(--red);
+    background: var(--accent);
     color: var(--paper);
   }
   .sr-only {
@@ -174,7 +182,7 @@ const ogImage = new URL('/og.jpg', Astro.site);
     to { clip-path: inset(-20% -20% -20% -20%); }
   }
   @keyframes shadow-in {
-    from { box-shadow: 0 0 0 var(--red); }
+    from { box-shadow: 0 0 0 var(--sand); }
   }
   .a-rise { animation: rise 0.8s var(--ease) var(--d, 0s) backwards; }
   .a-down { animation: fade-down 0.6s var(--ease) var(--d, 0s) backwards; }

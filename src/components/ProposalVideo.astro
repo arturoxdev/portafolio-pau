@@ -39,9 +39,9 @@ const ratio = video.width / video.height;
     aspect-ratio: var(--aspect);
     border-radius: 22px;
     overflow: hidden;
-    border: 2px solid var(--paper);
-    box-shadow: 8px 8px 0 var(--yellow);
-    background: #000;
+    border: 1px solid rgb(239 236 230 / 0.2);
+    box-shadow: 0 24px 48px rgb(0 0 0 / 0.28);
+    background: var(--dark);
   }
   video {
     width: 100%;
@@ -52,8 +52,8 @@ const ratio = video.width / video.height;
     position: absolute;
     top: 16px;
     left: 16px;
-    background: var(--yellow);
-    color: var(--ink);
+    background: var(--paper);
+    color: var(--olive);
     pointer-events: none;
   }
   .meta {
@@ -74,7 +74,7 @@ const ratio = video.width / video.height;
     font-size: 15px;
     line-height: 1.45;
     font-weight: 500;
-    color: #b8b2a6;
+    color: var(--sage);
   }
   @media (max-width: 720px) {
     .item {
