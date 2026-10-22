@@ -54,7 +54,7 @@ export const proposal = {
   carousel: {
     title: 'Carrusel animado',
     format: 'Instagram · 4:5',
-    description: 'Cinco láminas que se mueven solas: de la fachada a los detalles del interior, para recorrer la propiedad deslizando.',
+    description: 'Cinco láminas animadas que recorren la propiedad, de la fachada a los detalles del interior.',
     slides: [
       { src: '/videos/carrusel/01.mp4', poster: carrusel01 },
       { src: '/videos/carrusel/02.mp4', poster: carrusel02 },
