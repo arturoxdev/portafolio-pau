@@ -11,7 +11,7 @@ export const site = {
   whatsappMessage: 'Hola Paulina, vi tu portafolio y me gustaría platicar sobre un proyecto.',
   role: 'Diseñadora digital · IA generativa',
   bio: [
-    'Diseñadora digital desde 2023 y con IA generativa desde 2025. Creo imagen, video y postproducción para pauta, reels y redes de marcas como Luxury Habitat Real Estate.',
+    'Diseñadora de marketing con IA. Convierto renders y fotos en piezas para campaña (virtual staging, timelapses y reels) para marcas como Luxury Habitat Real Estate.',
   ],
   // Herramientas que aparecen debajo de la bio; `use` es la nota pequeña junto al nombre y `url` el sitio oficial.
   tools: [
